@@ -16,7 +16,9 @@
     "cors": "^2.8.4",
     "express": "^4.16.3",
     "morgan": "^1.9.1",
-    "nodemon": "^1.18.4"
+    "mysql2": "^1.6.1",
+    "nodemon": "^1.18.4",
+    "sequelize": "^4.39.0"
   },
   "devDependencies": {
     "eslint": "^5.6.0",
