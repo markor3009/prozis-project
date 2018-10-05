@@ -1,12 +1,12 @@
 <template>
   <div class="hello">
     <input type="text" v-model="email" placeholder="email">
-    <button type="button" name="button" @click="register">REGISTER</button>
+    <button type="button" name="button" @click="registerUser">REGISTER</button>
   </div>
 </template>
 
 <script>
-import AuthenticationService from '@/services/AuthenticationService'
+import {mapActions,mapGetters} from 'vuex'
 export default {
   name: 'HelloWorld',
   data () {
@@ -15,11 +15,13 @@ export default {
     }
   },
   methods: {
-    async register(){
-      const response = await AuthenticationService.register({
-        email: this.email
+    ...mapActions({
+      'register': 'register'
+    }),
+    registerUser(){
+      this.register().then((response)=>{
+        console.log(response);
       })
-      console.log(response);
     }
   }
 }

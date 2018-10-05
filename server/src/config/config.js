@@ -11,6 +11,11 @@ module.exports = {
       dialect: process.env.DIALECT || 'mysql',
       host: process.env.HOST || 'localhost',
       operatorsAliases: Op
+    },
+    define: {
+      charset: 'utf8',
+      collate: 'utf8_general_ci',
+      timestamps: true
     }
   }
 }
