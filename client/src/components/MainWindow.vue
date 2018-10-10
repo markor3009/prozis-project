@@ -6,7 +6,7 @@
 
 <script>
 import {bus} from '../main'
-import {mapActions, mapGetters} from 'vuex'
+import {mapGetters} from 'vuex'
 import Daily from '@/components/Daily'
 import Buyers from '@/components/Buyers'
 import Invoices from '@/components/Invoices'
@@ -23,27 +23,14 @@ export default {
     'Invoices': Invoices,
     'Products': Products
   },
-  methods: {
-    ...mapActions({
-      'fetchBuyers': 'fetchBuyers',
-      'fetchPrices': 'fetchPrices'
-    })
-  },
-  mounted(){
-    this.fetchBuyers().then(()=>{
-      for(var i = 0; i < this.buyers.length; i++){
-        this.fetchPrices(this.buyers[i].kup_id)
-      }
+  computed: {
+    ...mapGetters({
+      'buyers': 'getBuyers'
     })
   },
   created () {
     bus.$on('chosenMenu', menu => {
       this.component = menu
-    })
-  },
-  computed: {
-    ...mapGetters({
-      'buyers': 'getBuyers'
     })
   },
   beforeDestroy () {

@@ -1,7 +1,6 @@
 <template lang="html">
   <div class="wrapper">
-    <popup v-if="popupType.show"
-           :popupType="popupType"></popup>
+    <popup v-if="show" :items="itemsProps"></popup>
     <h1>Dnevni unos</h1>
     <multiselect
       placeholder = "Izaberi Kupca"
@@ -35,22 +34,19 @@
 
 <script>
 import Multiselect from 'vue-multiselect'
-import Popup from '@/components/Popup'
+import Popup from '@/components/popups/DailyPopup'
 import {bus} from '../main'
 import {mapGetters} from 'vuex'
 export default {
   name: 'Daily',
   data () {
     return {
+      loading: true,
       selected: {},
       quantity: [],
       total: 0,
-      popupType: {
-        show: false,
-        title: 'POTVRDA PORUDZBINE',
-        question: 'Da li ste sigurni da zelite da unesete porudzbinu?',
-        message: 'Uspesno ste potvrdili porudzbinu!'
-      }
+      show: false,
+      itemsProps:{}
     }
   },
   methods: {
@@ -63,7 +59,27 @@ export default {
       this.total = t
     },
     addReq () {
-      this.popupType.show = true
+      if (this.total !== 0) {
+        var items = []
+        for (var i = 0; i < this.selected.prices.length; i++) {
+          if (this.quantity[i] !==0 ) {
+            var itm = {
+              product: this.selected.prices[i].pro_id,
+              quantity: this.quantity[i],
+              price: this.selected.prices[i].cen_cena
+            }
+            items.push(itm)
+          }
+        }
+        var item = {
+          id: this.selected.kup_id,
+          items: items
+        }
+        this.itemsProps = item
+        this.show = true;
+      } else{
+        alert('Nema dodatih stavki')
+      }
     },
     reset (){
       for (var i = 0; i < this.selected.prices.length; i++) {
@@ -81,14 +97,11 @@ export default {
       'buyers': 'getBuyers'
     })
   },
-  created () {
+  mounted () {
     bus.$on('closePopup', () => {
-      this.popupType.show = false
+      this.show = false
+      this.reset()
     })
-  },
-  created() {
-    this.selected = this.buyers[0]
-    this.reset()
   },
   beforeDestroy () {
     bus.$off('closePopup')

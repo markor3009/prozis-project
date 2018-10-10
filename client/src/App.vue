@@ -8,7 +8,10 @@
 import store from './vuex/store.js'
 export default {
   name: 'App',
-  store
+  store,
+  created(){
+    this.$store.dispatch('fetchBuyers')
+  }
 }
 </script>
 <style src="./assets/css/multiselect.css"></style>

@@ -9,5 +9,15 @@ export default {
   },
   fetchPrices: (params) => {
     return axios.get('prices/'+params)
+  },
+  addItems: (params) => {
+    console.log('odavde',params);
+    return axios({
+      url: 'items',
+      method: 'POST',
+      dataType: 'json',
+      contentType: 'application/json',
+      data: params
+    })
   }
 }

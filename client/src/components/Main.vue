@@ -1,16 +1,16 @@
 <template>
 <div id="wrapper">
-  <div id="side-menu">
-    <ul>
-      <li v-for="m in menus"
-       :key="m.key"
-       @click= "changeComp(m.key)"
-       :class="{'active': m.key === selected}"
-       >{{m.title}}</li>
-    </ul>
+    <div id="side-menu">
+      <ul>
+        <li v-for="m in menus"
+         :key="m.key"
+         @click= "changeComp(m.key)"
+         :class="{'active': m.key === selected}"
+         >{{m.title}}</li>
+      </ul>
+    </div>
+    <main-window/>
   </div>
-  <main-window/>
-  <!-- <component :is="comp"></component> -->
 </div>
 </template>
 
@@ -31,6 +31,7 @@ export default {
       ]
     }
   },
+
   methods: {
     changeComp (menu) {
       this.selected = menu

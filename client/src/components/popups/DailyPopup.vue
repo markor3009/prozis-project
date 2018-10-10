@@ -3,33 +3,44 @@
     <div class="content">
       <span id="close" @click="closePopup">X</span>
       <div class="title">
-        <span>{{popupType.title}}</span>
+        <span>Dodaj u fakuturu</span>
       </div>
       <div class="question" v-if="!showMessage">
-        <p>{{popupType.question}}</p>
+        <p>Da li ste sigurni da želite da dodate stavke u fakturu?</p>
         <button @click="confirm">DA</button>
         <button @click="closePopup">NE</button>
       </div>
-      <p v-if="showMessage" class="message">{{popupType.message}}</p>
+      <p v-if="showMessage" class="message">Stavke uspešno unete!</p>
     </div>
   </div>
 </template>
 
 <script>
-import {bus} from '../main'
+import {bus} from '../../main'
+import {mapActions} from 'vuex'
 export default {
-  props: ['popupType'],
   data () {
     return {
       showMessage: false
     }
   },
+  props:['items'],
   methods: {
+    ...mapActions({
+      'addItems': 'addItems'
+    }),
     closePopup () {
       bus.$emit('closePopup')
     },
     confirm () {
-      
+      this.addItems(this.items).then(() =>{
+        this.showMessage = true
+        setTimeout(() => {
+          this.closePopup()
+        }, 700)
+      }).catch(() => {
+        alert('issue')
+      })
       this.showMessage = true
       setTimeout(() => {
         this.closePopup()
