@@ -1,86 +1,50 @@
 <template lang="html">
   <div class="wrapper">
     <h1>Kupci</h1>
-    <div id="select-menu"><multiselect :options="buyers" label="name" :value="selected.name" v-model="selected"></multiselect>
+    <div id="select-menu"><multiselect :options="buyers" label="kup_naziv" v-model="selected" @input="reset"></multiselect>
     <span @click="addNew">+DODAJ NOVOG KUPCA</span></div>
     <ul id="basic-info">
       <li><h3>Osnovne informacije</h3></li>
-      <li><label>Ime Prezime: </label><input type="text" v-model="selected.name"></li>
-      <li><label>Adresa: </label><input type="text" v-model="selected.adress"></li>
-      <li><label>PIB: </label><input type="text" v-model="selected.pib"></li>
+      <li><label>Ime Prezime: </label><input type="text" v-model="selected.kup_naziv"></li>
+      <li><label>Adresa: </label><input type="text" v-model="selected.kup_adresa"></li>
+      <li><label>PIB: </label><input type="text" v-model="selected.kup_pib"></li>
     </ul>
     <table>
       <tr>
         <th>Ime proizvoda</th>
         <th>Cena proizvoda</th>
       </tr>
-      <tr v-for="p in selected.products" :key="p.name">
-        <td>{{p.name}}</td>
-        <td><input v-model="p.price"></td>
+      <tr v-for="p in selected.prices" :key="p.pro_id">
+        <td>{{p.pro_naziv}}</td>
+        <td><input v-model="p.cen_cena"></td>
       </tr>
     </table>
-    <button id="save-button" @click="save">Sacuvaj</button>
+    <div class="buttons" v-if="changed">
+      <button id="save-button" @click="save">Sacuvaj izmene</button>
+      <button id="reset-button" @click="reset">Odbaci izmene</button>
+    </div>
   </div>
 </template>
 
 <script>
 import Multiselect from 'vue-multiselect'
-import {mapGetters} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 export default {
   name: 'Buyers',
   data () {
     return {
-      buyers: [
-        {name: 'PONCHO PLUS JEDAN UR Marko Mlađan PR',
-          adress: 'Bulevar Zorana Đinđića 44 A',
-          pib: '107481002',
-          products: [
-            {name: 'Somun veliki', price: 50},
-            {name: 'Somun mali', price: 30},
-            {name: 'Lepinja velika', price: 40},
-            {name: 'Lepinja mala', price: 20},
-            {name: 'Kifla', price: 10},
-            {name: 'Pogacica', price: 14},
-            {name: 'Pap. veliki', price: 50},
-            {name: 'Pap. mali', price: 40},
-            {name: 'Sis', price: 30}
-          ]},
-        {name: 'Marija Ercegovcevic',
-          adress: 'Zeleznicka 28',
-          pib: 'DSA564312',
-          products: [
-            {name: 'Somun veliki', price: 40},
-            {name: 'Somun mali', price: 20},
-            {name: 'Lepinja velika', price: 30},
-            {name: 'Lepinja mala', price: 30},
-            {name: 'Kifla', price: 12},
-            {name: 'Pogacica', price: 14},
-            {name: 'Pap. veliki', price: 50},
-            {name: 'Pap. mali', price: 30},
-            {name: 'Sis', price: 30}
-          ]},
-        {name: 'Petar Stojanovic',
-          adress: 'Krnjaca BB',
-          pib: 'ABCDEFG654',
-          products: [
-            {name: 'Somun veliki', price: 50},
-            {name: 'Somun mali', price: 50},
-            {name: 'Lepinja velika', price: 50},
-            {name: 'Lepinja mala', price: 50},
-            {name: 'Kifla', price: 50},
-            {name: 'Pogacica', price: 15},
-            {name: 'Pap. veliki', price: 50},
-            {name: 'Pap. mali', price: 50},
-            {name: 'Sis', price: 50}]}
-      ],
-      selected: null
+      selected: null,
+      buyers: []
     }
   },
   methods: {
+    ...mapActions({
+      'updateBuyers': 'updateBuyers'
+    }),
     addNew () {
-      var buyer = {name: '',
-        adress: '',
-        pib: '',
+      var buyer = {kup_naziv: '',
+        kup_adresa: '',
+        kup_ppib: '',
         products: [
           {name: 'Somun veliki', price: 50},
           {name: 'Somun mali', price: 50},
@@ -94,19 +58,56 @@ export default {
       this.selected = buyer
     },
     save () {
-      var b = this.selected
-      if (b.name !== '' && b.adress !== '' && b.pib !== '') {
-        this.buyers.push(b)
-        alert('Kupac ' + b.name + ' je sacuvan!')
-      } else {
-        alert('Sva polja su obavezna!')
+      if(this.selected.kup_pib != '' && this.selected.kup_naziv != '' && this.selected.kup_adresa != ''){
+        var empty = 0
+        for (var i = 0; i < this.selected.prices.length; i++) {
+          if(this.selected.prices[i].cen_cena !== '' && this.selected.prices[i].cen_cena !== '0'){
+            empty++;
+          }
+        }
+        if(empty == 0){
+          alert("Unesite cenu za bar jedan prozivod.")
+        }else{
+          this.updateBuyers(this.selected).then(() => {
+              alert('IZMENE SACUVANE');
+              this.buyers = JSON.parse(JSON.stringify(this.buyersSource))
+          }).catch(() => {
+            alert('krenulo po zlu')
+          })
+        }
+      }else{
+      alert("Sva polja su obavezna. Unesite sve informacije o kupcu.")
       }
+    },
+    reset(){
+      var id = this.selected.kup_id
+      for (var i = 0; i < this.buyersSource.length; i++) {
+        if(id == this.buyersSource[i].kup_id){
+          this.selected = JSON.parse(JSON.stringify(this.buyersSource[i]))
+        }
+      }
+    }
+  },
+  computed: {
+    ...mapGetters({
+      'buyersSource': 'getBuyers'
+    }),
+    changed(){
+      for (var i = 0; i < this.buyersSource.length; i++) {
+        if(this.selected.kup_id == this.buyersSource[i].kup_id){
+          if (JSON.stringify(this.selected) == JSON.stringify(this.buyersSource[i])) {
+            return false
+          }
+        }
+      }
+      return true
     }
   },
   components: {
     'multiselect': Multiselect
   },
   created () {
+    this.buyers = JSON.parse(JSON.stringify(this.buyersSource))
     this.selected = this.buyers[0]
   }
 }
@@ -181,9 +182,9 @@ table input{
   border-radius: 5px;
   padding: 3px;
 }
-#save-button{
-  display: block;
-  margin: 50px auto;
+.buttons button{
+  display: inline-block;
+  margin: 50px 40px;
   font-size: 14px;
   padding: 10px;
   border-radius: 5px;
@@ -192,7 +193,7 @@ table input{
   color: white;
   cursor: pointer;
 }
-#save-button:hover{
+.buttons button:hover{
   background-color: rgb(188, 238, 153);
   color: black;
 }

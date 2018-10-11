@@ -16,11 +16,21 @@ export default {
     })
   },
   fetchBuyers: ({commit, dispatch}) => {
-    console.log('bb');
     return api.fetchBuyers().then((response) => {
       commit('STORE_BUYERS',response.data)
       for (var i = 0; i < response.data.length; i++) {
         dispatch('fetchPrices',response.data[i].kup_id)
+      }
+    })
+  },
+  updateBuyers: ({commit, dispatch}, params) => {
+    return api.updateBuyers(params).then((response) => {
+      if (response.data == 'OK') {
+        dispatch('fetchBuyers').then(() => {
+          return Promise.resolve();
+        })
+      }else{
+        return Promise.reject()
       }
     })
   },

@@ -7,11 +7,17 @@ export default {
   fetchBuyers: () => {
     return axios.get('buyers')
   },
+  updateBuyers: (params) => {
+    return axios({
+      url: 'buyers',
+      method: 'PUT',
+      data: params
+    })
+  },
   fetchPrices: (params) => {
     return axios.get('prices/'+params)
   },
   addItems: (params) => {
-    console.log('odavde',params);
     return axios({
       url: 'items',
       method: 'POST',
