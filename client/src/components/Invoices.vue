@@ -4,10 +4,11 @@
     <h1>Fakture</h1>
     <multiselect
      :options="buyers"
-     label="name"
-     :value="selected.name"
-     v-model="selected"></multiselect>
-      <div id="tabela">
+     label="kup_naziv"
+     v-model="selected"
+    @input="getInvoice"
+     ></multiselect>
+      <div id="tabela" v-if="hasItems">
   		<table>
   			<tr>
   				<th>R.br</th>
@@ -21,12 +22,12 @@
   				<th>PDV</th>
   				<th>Iznos sa PDV-om</th>
   			</tr>
-  			<tr v-for="(p,index) in selected.products">
+  			<tr v-for="(p,index) in invoice">
   				<td>{{index+1}}.</td>
-  				<th>{{p.name}}</th>
+  				<th>{{p.pro_naziv}}</th>
   				<td>kom.</td>
-  				<td>{{p.quantity}}</td>
-  				<td>{{p.price}}</td>
+  				<td>{{p.stk_kolicina}}</td>
+  				<td>{{p.stk_cena}}</td>
   				<td>0,00</td>
   				<td>10,00</td>
   				<td>{{sum(p) | formatNumber}}</td>
@@ -43,8 +44,8 @@
   			<tr>
   				<td colspan="4" id="mali">Rekapitulacija po poreskim stopama</td>
   				<td colspan="4"><strong>Iznos PDV-a</strong></td>
+          <td colspan="2">{{total*.1 | formatNumber}}</td>
   			</tr>
-        <td colspan="2">{{total*.1 | formatNumber}}</td>
   			<tr>
   				<td class="mali">10%</td>
   				<td class="mali" colspan="2">{{total | formatNumber}}</td>
@@ -62,13 +63,17 @@
   				<td colspan="2"><strong>{{total*1.1 | formatNumber}}</strong></td>
   			</tr>
   		</table>
-  	</div><!--kraj tabele-->
-    <button type="button" id="add-button" name="button" @click="exportInvoice">Izdaj Fakturu</button>
+  	</div>
+    <div v-if="!hasItems">
+      "OVAJ KUPAC NEMA STAVKE U FAKTURI"
+    </div>
+    <button type="button" id="add-button" name="button" @click="exportInvoice" v-if="hasItems">Izdaj Fakturu</button>
   </div>
 </template>
 
 <script>
 import Multiselect from 'vue-multiselect'
+import {mapActions, mapGetters} from 'vuex'
 import ExportInvoice from './ExportInvoice'
 import {bus} from '../main'
 export default {
@@ -86,47 +91,25 @@ export default {
   },
   data () {
     return {
-      buyers: [
-        {name: 'PONCHO PLUS JEDAN UR Marko Mlađan PR',
-          adress: 'Bulevar Zorana Đinđića 44 A',
-          pib: '107481002',
-          products: [
-            {name: 'Somun veliki', quantity: 122, price: 70},
-            {name: 'Somun mali', quantity: 40, price: 30},
-            {name: 'Lepinja velika', quantity: 42, price: 40},
-            {name: 'Lepinja mala', quantity: 50, price: 20},
-            {name: 'Kifla', quantity: 50, price: 10},
-            {name: 'Pogacica', quantity: 60, price: 14},
-            {name: 'Pap. veliki', quantity: 12, price: 50},
-            {name: 'Pap. mali', quantity: 50, price: 40},
-            {name: 'Sis', quantity: 30, price: 30}
-          ]},
-        {name: 'Marija Ercegovcevic',
-          adress: 'Zeleznicka BB',
-          pib: '5106312',
-          products: [
-            {name: 'Somun veliki', quantity: 12, price: 70},
-            {name: 'Somun mali', quantity: 4, price: 30},
-            {name: 'Lepinja velika', quantity: 4, price: 40},
-            {name: 'Lepinja mala', quantity: 50, price: 20},
-            {name: 'Kifla', quantity: 5, price: 10},
-            {name: 'Pogacica', quantity: 160, price: 14},
-            {name: 'Pap. veliki', quantity: 12, price: 50},
-            {name: 'Pap. mali', quantity: 250, price: 40},
-            {name: 'Sis', quantity: 30, price: 30}
-          ]}
-      ],
-      selected: '',
+      items: '',
       exportVisible: false
     }
   },
   methods: {
+    ...mapActions({
+      'fetchInvoice': 'fetchInvoice'
+    }),
+    getInvoice(){
+      this.fetchInvoice(this.selected.kup_id).then((invoice) =>{
+        this.items = invoice
+      })
+    },
     sum (p) {
-      return p.price * p.quantity
+      return p.stk_cena * p.stk_kolicina
     },
     exportInvoice () {
       this.exportVisible = true
-      bus.$emit('exportInv', this.selected)
+      bus.$emit('exportInv', this.invoice)
     }
   },
   components: {
@@ -134,16 +117,50 @@ export default {
     'export-popup': ExportInvoice
   },
   computed: {
+    ...mapGetters({
+      'buyers': 'getBuyers'
+    }),
     total () {
       var t = 0
-      for (var i = 0; i < this.selected.products.length; i++) {
-        t += this.sum(this.selected.products[i])
+      for (var i = 0; i < this.invoice.length; i++) {
+        t += this.sum(this.invoice[i])
       }
       return t
+    },
+    hasItems() {
+      if(this.items.length !== 0)
+        return true;
+      return false;
+    },
+    invoice(){
+      var inv = []
+      var n = 0
+      inv.push(this.items[0])
+      console.log(this.items.length);
+      for (var i = 1; i < this.items.length; i++) {
+        for (var j = 0; j < inv.length; j++) {
+          if(this.items[i].pro_id == inv[j].pro_id){
+            inv[j].stk_kolicina += this.items[i].stk_kolicina
+            n++;
+            break;
+          }
+        }
+        if(n == 0){
+          inv.push(this.items[i])
+        }else{
+          n=0
+        }
+      }
+      console.log(inv.length);
+      return inv
     }
   },
   created () {
     this.selected = this.buyers[0]
+    this.fetchInvoice(this.selected.kup_id).then((items) => {
+      this.items = items
+      console.log(items);
+    })
     bus.$on('closeExport', () => {
       this.exportVisible = false
     })

@@ -14,6 +14,13 @@ export default {
       data: params
     })
   },
+  addBuyer: (params) => {
+    return axios({
+      url: 'buyers',
+      method: 'POST',
+      data: params
+    })
+  },
   fetchPrices: (params) => {
     return axios.get('prices/'+params)
   },
@@ -23,6 +30,26 @@ export default {
       method: 'POST',
       dataType: 'json',
       contentType: 'application/json',
+      data: params
+    })
+  },
+  fetchProducts: () => {
+    return axios({
+      url: 'products',
+      method: 'GET'
+    })
+  },
+  fetchInvoice: (params) => {
+    return axios({
+      url: 'invoices',
+      method: 'PUT',
+      data: params
+    })
+  },
+  addInvoice: (params) => {
+    return axios({
+      url: 'invoices',
+      method: 'POST',
       data: params
     })
   }

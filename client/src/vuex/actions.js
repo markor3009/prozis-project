@@ -23,12 +23,19 @@ export default {
       }
     })
   },
+  addBuyer: ({commit, dispatch}, params) => {
+    return api.addBuyer(params).then((response) => {
+      if (response.data == 'OK') {
+        return Promise.resolve()
+      }else{
+        return Promise.reject()
+      }
+    })
+  },
   updateBuyers: ({commit, dispatch}, params) => {
     return api.updateBuyers(params).then((response) => {
       if (response.data == 'OK') {
-        dispatch('fetchBuyers').then(() => {
           return Promise.resolve();
-        })
       }else{
         return Promise.reject()
       }
@@ -37,11 +44,29 @@ export default {
   addItems: ({commit}, params) => {
     return api.addItems(params).then((response) => {
       if(response.data == 'OK'){
-        console.log('ok');
         return Promise.resolve();
       }else{
         return Promise.reject();
       }
+    })
+  },
+  fetchProducts: ({commit}) => {
+    return api.fetchProducts().then((response) => {
+      commit('STORE_PRODUCTS', response.data)
+    })
+  },
+  addInvoice: ({commit, dispatch}, params) => {
+    return api.addInvoice({id:params}).then((response) => {
+      if(response.data == 'OK'){
+        return Promise.resolve()
+      }else{
+        return Promise.reject()
+      }
+    })
+  },
+  fetchInvoice: ({commit}, params) => {
+    return api.fetchInvoice({id: params}).then((response)=> {
+      return response.data;
     })
   }
 }

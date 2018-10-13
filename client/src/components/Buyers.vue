@@ -2,10 +2,11 @@
   <div class="wrapper">
     <h1>Kupci</h1>
     <div id="select-menu"><multiselect :options="buyers" label="kup_naziv" v-model="selected" @input="reset"></multiselect>
-    <span @click="addNew">+DODAJ NOVOG KUPCA</span></div>
+    <span @click="createNewBuyer">+DODAJ NOVOG KUPCA</span></div>
     <ul id="basic-info">
       <li><h3>Osnovne informacije</h3></li>
       <li><label>Ime Prezime: </label><input type="text" v-model="selected.kup_naziv"></li>
+      <li><label>Pozivni broj: </label><input type="text" v-model="selected.kup_pozbr"></li>
       <li><label>Adresa: </label><input type="text" v-model="selected.kup_adresa"></li>
       <li><label>PIB: </label><input type="text" v-model="selected.kup_pib"></li>
     </ul>
@@ -39,26 +40,46 @@ export default {
   },
   methods: {
     ...mapActions({
-      'updateBuyers': 'updateBuyers'
+      'updateBuyers': 'updateBuyers',
+      'fetchBuyers': 'fetchBuyers',
+      'fetchPrices': 'fetchPrices',
+      'fetchProducts': 'fetchProducts',
+      'addBuyer': 'addBuyer'
     }),
-    addNew () {
-      var buyer = {kup_naziv: '',
+    createNewBuyer () {
+      var buyer = {
+        kup_naziv: '',
+        kup_pozbr: '',
         kup_adresa: '',
-        kup_ppib: '',
-        products: [
-          {name: 'Somun veliki', price: 50},
-          {name: 'Somun mali', price: 50},
-          {name: 'Lepinja velika', price: 50},
-          {name: 'Lepinja mala', price: 50},
-          {name: 'Kifla', price: 50},
-          {name: 'Pogacica', price: 15},
-          {name: 'Pap. veliki', price: 50},
-          {name: 'Pap. mali', price: 50},
-          {name: 'Sis', price: 50}]}
+        kup_pib: '',
+        prices: JSON.parse(JSON.stringify(this.products))
+      }
       this.selected = buyer
     },
+    update(){
+      this.updateBuyers(this.selected).then(() => {
+          this.fetchBuyers()
+            .then(() => {
+              this.buyers = JSON.parse(JSON.stringify(this.buyersSource))
+              alert('IZMENE SACUVANE');
+            })
+      }).catch(() => {
+        alert('krenulo po zlu')
+      })
+    },
+    saveNewBuyer(){
+      this.addBuyer(this.selected).then(() => {
+        this.fetchBuyers()
+          .then(() => {
+            this.buyers = JSON.parse(JSON.stringify(this.buyersSource))
+            alert('SACUVAN NOVI KUPAC');
+          })
+      }).catch(() => {
+        alert('po zlu')
+      })
+    },
     save () {
-      if(this.selected.kup_pib != '' && this.selected.kup_naziv != '' && this.selected.kup_adresa != ''){
+      if(this.selected.kup_pib != '' && this.selected.kup_naziv != '' && this.selected.kup_adresa != '' && this.selected.kup_pozbr != ''){
         var empty = 0
         for (var i = 0; i < this.selected.prices.length; i++) {
           if(this.selected.prices[i].cen_cena !== '' && this.selected.prices[i].cen_cena !== '0'){
@@ -68,29 +89,36 @@ export default {
         if(empty == 0){
           alert("Unesite cenu za bar jedan prozivod.")
         }else{
-          this.updateBuyers(this.selected).then(() => {
-              alert('IZMENE SACUVANE');
-              this.buyers = JSON.parse(JSON.stringify(this.buyersSource))
-          }).catch(() => {
-            alert('krenulo po zlu')
-          })
+          console.log('ovo je kupac koga saljem negde....'+this.selected);
+          if (this.selected.kup_id !== undefined) {
+            console.log('na update ga saljem');
+            this.update()
+          }else{
+            console.log('na kreiranje ga saljem');
+            this.saveNewBuyer()
+          }
         }
       }else{
       alert("Sva polja su obavezna. Unesite sve informacije o kupcu.")
       }
     },
     reset(){
-      var id = this.selected.kup_id
-      for (var i = 0; i < this.buyersSource.length; i++) {
-        if(id == this.buyersSource[i].kup_id){
-          this.selected = JSON.parse(JSON.stringify(this.buyersSource[i]))
+      if(this.selected.kup_id !== undefined){
+        var id = this.selected.kup_id
+        for (var i = 0; i < this.buyersSource.length; i++) {
+          if(id == this.buyersSource[i].kup_id){
+            this.selected = JSON.parse(JSON.stringify(this.buyersSource[i]))
+          }
         }
+      }else{
+        this.selected = JSON.parse(JSON.stringify(this.buyersSource[this.buyersSource.length-1]))
       }
     }
   },
   computed: {
     ...mapGetters({
-      'buyersSource': 'getBuyers'
+      'buyersSource': 'getBuyers',
+      'products': 'getProducts'
     }),
     changed(){
       for (var i = 0; i < this.buyersSource.length; i++) {
@@ -109,6 +137,7 @@ export default {
   created () {
     this.buyers = JSON.parse(JSON.stringify(this.buyersSource))
     this.selected = this.buyers[0]
+    this.fetchProducts()
   }
 }
 </script>
@@ -182,8 +211,10 @@ table input{
   border-radius: 5px;
   padding: 3px;
 }
+.buttons{
+  float: right;
+}
 .buttons button{
-  display: inline-block;
   margin: 50px 40px;
   font-size: 14px;
   padding: 10px;

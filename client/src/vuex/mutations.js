@@ -11,5 +11,8 @@ export default {
         state.buyers[i].prices = payload.prices
       }
     }
+  },
+  STORE_PRODUCTS(state, payload){
+    state.products = payload;
   }
 }

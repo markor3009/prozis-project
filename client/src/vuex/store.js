@@ -7,7 +7,8 @@ import mutations from './mutations.js'
 Vue.use(Vuex)
 
 const state = {
-  buyers : []
+  buyers: [],
+  products: []
 }
 
 export default new Vuex.Store({
