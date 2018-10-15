@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 
 module.exports = {
-  port: 8081,
+  port: port: process.env.PORT || 8081,
   db: {
     database: process.env.DB_NAME || 'prozis',
     user: process.env.DB_USER || 'root',
