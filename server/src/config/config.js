@@ -9,7 +9,7 @@ module.exports = {
     password: process.env.DB_PASS || 'mlatajetrso',
     options: {
       dialect: process.env.DIALECT || 'mysql',
-      host: process.env.HOST || 'localhost',
+      host: process.env.HOST || '46.101.8.242',
       operatorsAliases: Op
     },
     define: {
