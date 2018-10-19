@@ -8,7 +8,8 @@ Vue.use(Vuex)
 
 const state = {
   buyers: [],
-  products: []
+  products: [],
+  invoice: ''
 }
 
 export default new Vuex.Store({

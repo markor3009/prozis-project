@@ -64,6 +64,15 @@ export default {
       }
     })
   },
+  closeInvoice: ({commit}, params) => {
+    return api.closeInvoice(params).then((response) =>{
+      if(response.data == 'OK'){
+        return Promise.resolve()
+      }else{
+        return Promise.reject()
+      }
+    })
+  },
   fetchInvoice: ({commit}, params) => {
     return api.fetchInvoice({id: params}).then((response)=> {
       return response.data;

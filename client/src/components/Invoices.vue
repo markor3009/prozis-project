@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="wrapper">
-    <export-popup v-if="exportVisible" :buyer="selected"></export-popup>
+    <export-popup v-if="exportVisible" :invProps="invProps"></export-popup>
     <h1>Fakture</h1>
     <multiselect
      :options="buyers"
@@ -74,7 +74,7 @@
 <script>
 import Multiselect from 'vue-multiselect'
 import {mapActions, mapGetters} from 'vuex'
-import ExportInvoice from './ExportInvoice'
+import ExportInvoice from './popups/ExportInvoice'
 import {bus} from '../main'
 export default {
   name: 'Invoices',
@@ -92,7 +92,9 @@ export default {
   data () {
     return {
       items: '',
-      exportVisible: false
+      exportVisible: false,
+      selected: '',
+      invProps:''
     }
   },
   methods: {
@@ -108,8 +110,18 @@ export default {
       return p.stk_cena * p.stk_kolicina
     },
     exportInvoice () {
+      this.invProps = {
+        invoice: this.invoice,
+        total: this.total*1.1,
+        buyer: this.selected.kup_id
+      }
       this.exportVisible = true
-      bus.$emit('exportInv', this.invoice)
+    },
+    refresh(){
+      this.selected = this.buyers[0]
+      this.fetchInvoice(this.selected.kup_id).then((items) => {
+        this.items = items
+      })
     }
   },
   components: {
@@ -136,7 +148,6 @@ export default {
       var inv = []
       var n = 0
       inv.push(this.items[0])
-      console.log(this.items.length);
       for (var i = 1; i < this.items.length; i++) {
         for (var j = 0; j < inv.length; j++) {
           if(this.items[i].pro_id == inv[j].pro_id){
@@ -151,18 +162,17 @@ export default {
           n=0
         }
       }
-      console.log(inv.length);
       return inv
     }
   },
   created () {
-    this.selected = this.buyers[0]
-    this.fetchInvoice(this.selected.kup_id).then((items) => {
-      this.items = items
-      console.log(items);
-    })
+    this.refresh()
     bus.$on('closeExport', () => {
-      this.exportVisible = false
+      this.exportVisible = false;
+    })
+    bus.$on('closedInvoice', () =>{
+      this.refresh();
+      this.exportVisible = false;
     })
   }
 }

@@ -10,24 +10,24 @@
 
   	<div id="float">
   	<div id="racun">
-  		<h2>RAČUN br:{{buyer.invNumber}}</h2>
+  		<h2>RAČUN br:{{invNumber}}</h2>
   		<div id="podaci">
   			<p>
   				<ul>
-  					<li>Datum izdavanja računa: {{buyer.invDate}}</li>
+  					<li>Datum izdavanja računa: {{invDate}}</li>
   					<li>Mesto izdavanja računa: Beograd- Zemun</li>
-  					<li>Valuta plaćanja računa: {{buyer.invExtDate}}</li>
-  					<li>Datum prometa dobara i usluga:{{buyer.invDate}}</li>
+  					<li>Valuta plaćanja računa: {{invExtDate}}</li>
+  					<li>Datum prometa dobara i usluga:{{invDate}}</li>
   				</ul>
   			</p>
   		</div><!--kraj podaci-->
   	</div><!--kraj racuna-->
 
   	<div id="kupac">
-  		<p>{{buyer.name}}<br>
-  		{{buyer.adress}}<br>
+  		<p>{{buyer.kup_naziv}}<br>
+  		{{buyer.kup_adresa}}<br>
   		11070 Novi Beograd<br>
-  		PIB: {{buyer.pib}}</p>
+  		PIB: {{buyer.kup_pib}}</p>
   	</div><!--kraj kupac-->
   	</div><!--kraj float-->
 
@@ -46,12 +46,12 @@
   				<th>PDV</th>
   				<th>Iznos sa PDV-om</th>
   			</tr>
-        <tr v-for="(p,index) in buyer.products">
+        <tr v-for="(p,index) in invoice">
   				<td>{{index+1}}.</td>
-  				<th>{{p.name}}</th>
+  				<th>{{p.pro_naziv}}</th>
   				<td>kom.</td>
-  				<td>{{p.quantity}}</td>
-  				<td>{{p.price}}</td>
+  				<td>{{p.stk_kolicina}}</td>
+  				<td>{{p.stk_cena}}</td>
   				<td>0.00</td>
   				<td>10,00</td>
   				<td>{{sum(p) | formatNumber}}</td>
@@ -124,12 +124,12 @@
   	</div>
 
   </div><!--kraj wrapper-->
-  <button type="button" name="button" @click = "test">PDF</button>
 </div>
 </template>
 
 <script>
-
+import {mapActions, mapGetters} from 'vuex'
+import {bus} from '../main'
 export default {
   filters: {
     formatNumber (n) {
@@ -142,35 +142,85 @@ export default {
       return n+',00'
     }
   },
+  data() {
+    return{
+      items: []
+    }
+  },
   methods: {
+    ...mapActions({
+      'fetchInvoice': 'fetchInvoice'
+    }),
     sum (p) {
-      return p.price * p.quantity
-    },
-    test () {
-
+      return p.stk_cena * p.stk_kolicina
     }
   },
   computed: {
-    buyer () {
-      return this.$route.params.buyer
-    },
+    ...mapGetters({
+      'buyers': 'getBuyers'
+    })
+    ,
     total () {
       var t = 0
-      for (var i = 0; i < this.buyer.products.length; i++) {
-        t += this.sum(this.buyer.products[i])
+      for (var i = 0; i < this.invoice.length; i++) {
+        t += this.sum(this.invoice[i])
       }
       return t
+    },
+    invNumber(){
+      return this.$route.query.number;
+    },
+    invDate(){
+      return this.$route.query.date;
+    },
+    invExtDate(){
+      return this.$route.query.extDate;
+    },
+    buyer() {
+      var b = {}
+      for (var i = 0; i < this.buyers.length; i++) {
+        if(this.buyers[i].kup_id == this.$route.query.id){
+          b = JSON.parse(JSON.stringify(this.buyers[i]))
+        }
+      }
+      return b
+    },
+    invoice(){
+      var inv = []
+      var n = 0
+      inv.push(this.items[0])
+      for (var i = 1; i < this.items.length; i++) {
+        for (var j = 0; j < inv.length; j++) {
+          if(this.items[i].pro_id == inv[j].pro_id){
+            inv[j].stk_kolicina += this.items[i].stk_kolicina
+            n++;
+            break;
+          }
+        }
+        if(n == 0){
+          inv.push(this.items[i])
+        }else{
+          n=0
+        }
+      }
+      return inv
     }
+  },
+  created(){
+    var buyerID = this.$route.query.id
+    this.fetchInvoice(buyerID).then((items) => {
+      this.items = JSON.parse(JSON.stringify(items));
+    })
   }
 }
 </script>
 
 <style lang="css" scoped>
 #wrapper{
-	width: 960px;
+	width: 100%;
 	margin: 0 auto;
 	background-color: white;
-	padding: 20px;
+	padding: 20px
 }
 #zaglavlje{
 	margin-left: 20%;
@@ -180,7 +230,7 @@ export default {
 	font-family: Arial;
 }
 #float{
-	width: 920;
+	width:98%;
 	padding: 15px;
 	overflow: hidden;
 	margin-bottom: 20px;
@@ -188,7 +238,7 @@ export default {
 
 table{
 	border-collapse: collapse;
-	width: 100%;
+	width: 98%;
 }
 
 th, td {
@@ -226,9 +276,13 @@ ul{
 }
 #kupac{
 	float:right;
+  margin-right: 10%;
 	padding: 15px;
 	border:solid 2px;
 	font-weight: bold;
+}
+#kupac::children{
+  float: left;
 }
 #dodatak{
 	margin-top: 30px;

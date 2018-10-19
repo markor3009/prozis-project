@@ -52,5 +52,12 @@ export default {
       method: 'POST',
       data: params
     })
+  },
+  closeInvoice: (params) => {
+    return axios ({
+      url:'close',
+      method: 'POST',
+      data: params
+    })
   }
 }

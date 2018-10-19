@@ -11,12 +11,30 @@ module.exports = {
   },
   addInvoice (req, res) {
     var buyerId = req.body.id
-    seq.query('INSERT INTO faktura(kup_id, sta_id) VALUES (?,1)', {
+    seq.query('INSERT INTO faktura(kup_id, sta_id, fak_od) VALUES (?,1,CURDATE())', {
       replacements: [buyerId],
       type: seq.QueryTypes.INSERT
     })
       .then(() => {
         res.send('OK')
       })
+  },
+  closeInvoice (req, res) {
+    var buyerID = req.body.buyerID
+    var invoiceID = req.body.invoiceID
+    var invoiceNumber = req.body.invoiceNumber
+    var invoiceDate = req.body.invoiceDate
+    var invoiceTotal = req.body.invoiceTotal
+    seq.query('UPDATE faktura SET sta_id = 2 , fak_do = ?, fak_iznos = ?, fak_broj = ? WHERE fak_id = ?', {
+      replacements: [invoiceDate, invoiceTotal, invoiceNumber, invoiceID],
+      type: seq.QueryTypes.UPDATE
+    }).then(() => {
+      seq.query('INSERT INTO faktura(kup_id, sta_id, fak_od) VALUES (?, 1, CURDATE())', {
+        replacements: [buyerID],
+        type: seq.QueryTypes.INSERT
+      })
+    }).then(() => {
+      res.send('OK')
+    })
   }
 }

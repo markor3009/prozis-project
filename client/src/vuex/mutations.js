@@ -14,5 +14,8 @@ export default {
   },
   STORE_PRODUCTS(state, payload){
     state.products = payload;
+  },
+  STORE_INVOICE(state, payload){
+    state.invoice = payload;
   }
 }

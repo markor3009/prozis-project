@@ -3,57 +3,97 @@
     <div class="content">
       <span id="close" @click="closePopup">X</span>
       <div class="title">
-        <span>Faktura {{buyer.name}}</span>
+        <span>Faktura {{buyer.kup_naziv}}</span>
       </div>
       <table class="invForm">
         <tr>
           <td>Broj fakture:</td>
-          <td><input type="text" v-model="invNumber"/></td>
+          <td><input type="text" v-model="invNumber" :disabled="disabledFields"/></td>
         </tr>
         <tr>
           <td>Datum izdavanja robe:</td>
-          <td><input type="date" v-model="invDate"/></td>
+          <td><input type="date" v-model="invDate" :disabled="disabledFields"/></td>
         </tr>
         <tr>
           <td>Valuta placanja fakture:</td>
-          <td><input type="date" v-model="invExtDate"/></td>
+          <td><input type="date" v-model="invExtDate" :disabled="disabledFields"/></td>
         </tr>
       </table>
-      <button type="button" id="out-button" @click="exportInv">Izdaj fakturu</button>
-      <span id="message" v-if="showMessage">
-        {{message}}
-      </span>
+      <div class="footer">
+        <button type="button" class="out-button" @click="exportInv" v-if="!clicked">Izdaj fakturu</button>
+        <button type="button" class="out-button" @click="closeInvoice" v-if="clicked">Zatvori fakturu</button>
+        <button type="button" class="out-button" @click="closePopup" v-if="clicked">Odustani</button>
+        <span id="message" v-if="showMessage">
+          {{message}}
+        </span>
+      </div>
     </div>
   </div>
+
 </template>
 
 <script>
-import {bus} from '../main'
+import {bus} from '../../main'
+import {mapActions, mapGetters} from 'vuex'
 export default {
-  props: ['buyer'],
+  props:['invProps'],
   data () {
     return {
       invNumber: '',
       invDate: '',
       invExtDate: '',
       message : 'Sva polja su obavezna!',
-      showMessage: false
+      showMessage: false,
+      clicked: false,
+      disabledFields: false
     }
   },
   methods: {
+    ...mapActions({
+      'closeInvoiceAction': 'closeInvoice'
+    }),
     closePopup () {
       bus.$emit('closeExport')
     },
+    closeInvoice(){
+      var invoice = {
+        invoiceID: this.inv[0].fak_id,
+        invoiceNumber: this.invNumber,
+        invoiceDate: this.invExtDate,
+        invoiceTotal: this.invProps.total,
+        buyerID: this.buyer.kup_id
+      }
+      this.closeInvoiceAction(invoice).then(() => {
+        bus.$emit('closedInvoice')
+      });
+    },
     exportInv () {
       if(this.invNumber!=='' && this.invDate !== '' && this.invExtDate !== ''){
-        this.buyer.invNumber = this.invNumber;
-        this.buyer.invDate = this.invDate;
-        this.buyer.invExtDate = this.invExtDate;
-        this.$router.push({name: 'faktura', params: {buyer: this.buyer}})
+        this.showMessage = false;
+        this.clicked = true;
+        this.disabledFields = true;
+        let routeData = this.$router.resolve({name: 'faktura', query: {id: this.buyer.kup_id, number: this.invNumber, date: this.invDate, extDate: this.invExtDate}});
+        window.open(routeData.href, '_blank');
       }else{
         this.showMessage = true
       }
     }
+  },
+  computed : {
+    ...mapGetters({
+      'buyers': 'getBuyers'
+    }),
+    buyer(){
+      for (var i = 0; i < this.buyers.length; i++) {
+        if(this.buyers[i].kup_id == this.invProps.buyer){
+          return this.buyers[i]
+        }
+      }
+    },
+    inv(){
+      return this.invProps.invoice
+    }
+
   }
 }
 </script>
@@ -140,9 +180,11 @@ export default {
 .invForm tr button{
   margin: auto;
 }
-#out-button{
-  display: block;
-  margin: 50px auto;
+.footer {
+  text-align: center;
+}
+.out-button{
+  margin: 20px auto;
   font-size: 14px;
   padding: 10px;
   border-radius: 5px;
@@ -151,7 +193,7 @@ export default {
   color: white;
   cursor: pointer;
 }
-#out-button:hover{
+.out-button:hover{
   background-color: rgb(188, 238, 153);
   color: black;
 }

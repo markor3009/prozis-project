@@ -2,5 +2,6 @@ import store from './store.js'
 
 export default {
   getBuyers: (state) => state.buyers,
-  getProducts: (state) => state.products
+  getProducts: (state) => state.products,
+  getInvoice: (state) => state.invoice
 }

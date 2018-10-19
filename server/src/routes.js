@@ -15,4 +15,5 @@ module.exports = (app) => {
   app.get('/api/products', ProductsController.getProducts)
   app.put('/api/invoices', InvoiceController.getInvoice)
   app.post('/api/invoices', InvoiceController.addInvoice)
+  app.post('/api/close', InvoiceController.closeInvoice)
 }
