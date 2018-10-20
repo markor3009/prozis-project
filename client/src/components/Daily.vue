@@ -10,6 +10,10 @@
       class="multiselect"
       @input="reset"
      ></multiselect>
+     <date-picker
+      id="datepicker"
+      v-model="insertDate"
+      ></date-picker>
     <table>
       <tr>
         <th class="title">Naziv proizvoda</th>
@@ -35,6 +39,8 @@
 <script>
 import Multiselect from 'vue-multiselect'
 import Popup from '@/components/popups/DailyPopup'
+import flatPickr from 'vue-flatpickr-component';
+import 'flatpickr/dist/flatpickr.css';
 import {bus} from '../main'
 import {mapGetters} from 'vuex'
 export default {
@@ -46,7 +52,8 @@ export default {
       quantity: [],
       total: 0,
       show: false,
-      itemsProps:{}
+      itemsProps:{},
+      insertDate:''
     }
   },
   methods: {
@@ -73,7 +80,8 @@ export default {
         }
         var item = {
           id: this.selected.kup_id,
-          items: items
+          items: items,
+          date: this.insertDate
         }
         this.itemsProps = item
         this.show = true;
@@ -90,7 +98,8 @@ export default {
   },
   components: {
     'multiselect': Multiselect,
-    'popup': Popup
+    'popup': Popup,
+    'date-picker': flatPickr
   },
   computed: {
     ...mapGetters({
@@ -98,6 +107,7 @@ export default {
     })
   },
   mounted () {
+    this.insertDate = Date.now()
     bus.$on('closePopup', () => {
       this.show = false
       this.reset()
@@ -113,6 +123,11 @@ export default {
 .multiselect{
   width: 50%;
   margin: 50px auto;
+}
+#datepicker{
+  display: block;
+  text-align: center;
+  margin: 30px auto;
 }
 table{
   margin: auto;
