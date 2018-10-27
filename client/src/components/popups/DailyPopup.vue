@@ -3,7 +3,7 @@
     <div class="content">
       <span id="close" @click="closePopup">X</span>
       <div class="title">
-        <span>Dodaj u fakuturu</span>
+        <span>DODAJ U FAKTURU</span>
       </div>
       <div class="question" v-if="!showMessage">
         <p>Da li ste sigurni da želite da dodate stavke u fakturu?</p>
@@ -60,19 +60,7 @@ export default {
     background-color: rgba(0,0,0,0.7);
     z-index: 10000;
   }
-  #close-button{
-    color: rgb(170, 170, 170);
-    font-size: 50px;
-    display: inline-block;
-    text-align: center;
-    padding: 10px;
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
-    float: right;
-    margin-top: 10px;
-    margin-right: 15px;
-  }
+
   .content{
     position: absolute;
     background-color: white;
@@ -88,18 +76,19 @@ export default {
     top: -20px;
     float: right;
     right: -15px;
-    font-size: 20px;
+    font-size: 15px;
     border: 1px solid rgb(76, 65, 93);
     border-radius: 25px;
-    padding: 7px;
+    padding: 5px;
     width: 20px;
     height: 20px;
     text-align: center;
+    vertical-align: middle;
     background-color: white;
     color: rgb(76, 65, 93);
-    background-color: rgb(76, 65, 93);
+    background-color: #8D6E63;
+    color: #fff;
     border: 1px solid white;
-    color: white;
   }
   #close:hover{
     background-color: white;
@@ -108,16 +97,16 @@ export default {
     cursor: pointer;
   }
   .title{
-    height: 10%;
     width: 100%;
     background-color: silver;
-    font-size: 20px;
+    font-size: 15px;
     text-align: center;
   }
   .title span{
     display: inline-block;
     height: 100%;
     margin-top: 10px;
+    margin-bottom: 5px;
   }
   .question {
     text-align: center;
@@ -132,13 +121,15 @@ export default {
     width: 70px;
     border: none;
     cursor: pointer;
-    background-color: rgb(76, 65, 93);
-    color: white;
+    background-color: #8D6E63;
+    color: #fff;
     border-radius: 5px;
   }
   .question button:hover{
-    background-color: rgb(188, 238, 153);
-    color: black;
+    background-color: #D7CCC8;
+    color: #8D6E63;
+    border: 1px solid #8D6E63;
+    cursor: pointer;
   }
   .message{
     text-align: center;

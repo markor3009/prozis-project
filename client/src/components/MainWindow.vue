@@ -40,14 +40,9 @@ export default {
 </script>
 
 <style lang="css">
-  h1{
-    margin: 10px;
-    text-align: center;
-  }
   .wrapper{
     padding: 0px;
-    width: 80%;
-    float: left;
+    width: 100%;
     height: 100%;
     background-color: rgb(245, 245, 245)
   }

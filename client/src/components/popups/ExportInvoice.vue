@@ -3,7 +3,7 @@
     <div class="content">
       <span id="close" @click="closePopup">X</span>
       <div class="title">
-        <span>Faktura {{buyer.kup_naziv}}</span>
+        <span>{{buyer.kup_naziv}}</span>
       </div>
       <table class="invForm">
         <tr>
@@ -136,18 +136,19 @@ export default {
   top: -20px;
   float: right;
   right: -15px;
-  font-size: 20px;
+  font-size: 15px;
   border: 1px solid rgb(76, 65, 93);
   border-radius: 25px;
-  padding: 7px;
+  padding: 5px;
   width: 20px;
   height: 20px;
   text-align: center;
+  vertical-align: middle;
   background-color: white;
   color: rgb(76, 65, 93);
-  background-color: rgb(76, 65, 93);
+  background-color: #8D6E63;
+  color: #fff;
   border: 1px solid white;
-  color: white;
 }
 #close:hover{
   background-color: white;
@@ -156,16 +157,18 @@ export default {
   cursor: pointer;
 }
 .title{
-  height: 10%;
   width: 100%;
   background-color: silver;
   font-size: 20px;
   text-align: center;
+  vertical-align: middle;
 }
 .title span{
   display: inline-block;
+  color: #4E342E;
   height: 100%;
   margin-top: 10px;
+  margin-bottom: 5px;
 }
 .invForm{
   width: 70%;
@@ -189,13 +192,15 @@ export default {
   padding: 10px;
   border-radius: 5px;
   border: 1px solid black;
-  background-color: rgb(76, 65, 93);
-  color: white;
+  background-color: #8D6E63;
+  color: #fff;
   cursor: pointer;
 }
 .out-button:hover{
-  background-color: rgb(188, 238, 153);
-  color: black;
+  background-color: #D7CCC8;
+  color: #8D6E63;
+  border: 1px solid #8D6E63;
+  cursor: pointer;
 }
 #message {
   display: inline-block;

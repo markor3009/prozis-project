@@ -1,34 +1,38 @@
 <template lang="html">
   <div class="wrapper">
     <popup v-if="show" :items="itemsProps"></popup>
-    <h1>Dnevni unos</h1>
-    <multiselect
-      placeholder = "Izaberi Kupca"
-      :options="buyers"
-      label="kup_naziv"
-      v-model="selected"
-      class="multiselect"
-      @input="reset"
-     ></multiselect>
-     <date-picker
-      id="datepicker"
-      v-model="insertDate"
-      ></date-picker>
+    <header>
+  		<h1><i class="far fa-calendar-check"></i>DNEVNI UNOS</h1>
+   	</header>
+    <div id="controls">
+      <multiselect
+        placeholder = "Izaberi Kupca"
+        :options="buyers"
+        label="kup_naziv"
+        v-model="selected"
+        class="multiselect"
+        @input="reset"
+       ></multiselect>
+       <date-picker
+        id="datepicker"
+        v-model="insertDate"
+        ></date-picker>
+    </div>
     <table>
-      <tr>
-        <th class="title">Naziv proizvoda</th>
+      <tr id="rawname">
+        <th class="firstTD">Naziv proizvoda</th>
         <th>Kolicina</th>
         <th>Cena</th>
         <th>Iznos</th>
       </tr>
       <tr v-for="(p, index) in selected.prices" :key="p.pro_naziv">
-        <td class="title"><label>{{p.pro_naziv}}</label></td>
-        <td><input v-model="quantity[index]" @change="calculate"></td>
-        <td class="number"><span>{{p.cen_cena}}</span></td>
-        <td class="number"><span>{{quantity[index]*p.cen_cena}}</span></td>
+        <td class="firstTD">{{p.pro_naziv}}</td>
+        <td class="kolicina"><input v-model="quantity[index]" @change="calculate" class="poljeKol"></td>
+        <td>{{p.cen_cena}}</td>
+        <td>{{quantity[index]*p.cen_cena}}</td>
       </tr>
-      <tr class="total-row">
-        <td>Total</td>
+      <tr id="end">
+        <td class="firstTD">Total</td>
         <td colspan="3" class="total">{{total}}</td>
       </tr>
     </table>
@@ -120,70 +124,106 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.wrapper{
+  width: 100%;
+}
+header{
+  display: block;
+	text-align: center;
+	color: #fff;
+	background-color: #8D6E63;
+	margin: auto;
+	height: 50px;
+  width: 640px;
+}
+header h1{
+	margin: 0;
+	padding: 0;
+	line-height: 50px;
+	font-weight: normal;
+  font-size: 20px;
+}
+header i{
+	color: white;
+	margin-right: 10px;
+}
+#controls{
+  margin: 20px 0px;
+  text-align: center;
+}
 .multiselect{
-  width: 50%;
-  margin: 50px auto;
+  display: inline-block;
+  width: 25%;
+  margin-right: 20px;
 }
 #datepicker{
-  display: block;
   text-align: center;
-  margin: 30px auto;
+  height: 20px;
+  border-radius: 5px;
 }
 table{
-  margin: auto;
-  font-size: 14px;
-  width: 40%;
-  border-collapse: collapse;
-}
-table tr{
-  border-bottom: 1px solid blue;
-}
-table td, th{
-  padding: 5px;
-}
-table label{
   display: block;
+  margin: auto;
+	width: 600px;
+	text-align: right;
+	border-bottom: 1px solid #4E342E;
+	font-size: 14px;
 }
-table input{
-  width: 30px;
+table tr th{
+	padding: 5px;
+	margin-left: 20px;
+}
+table tr td{
+	padding: 5px;
+  width: 70px;
+}
+table tr:nth-of-type(2n){
+	background-color: #D7CCC8;
+}
+.firstTD{
+	text-align:left;
+	font-weight: normal;
+  width: 70%;
+}
+#rawname .firstTD{
+	font-weight: bold;
+}
+.kolicina{
+	text-align: center;
+}
+.poljeKol{
   text-align: center;
-  display: block;
-  margin: auto;
-  font-size: 14px;
-  border: none;
-  border-radius: 5px;
-  padding: 3px;
+	width: 30px;
+}
+#end{
+	font-weight: bold;
+}
+#end th{
+	font-weight: bold;
 }
 .total{
   font-weight: bold;
   text-align: right;
 }
 #add-button{
+  color: #fff;
+	background-color: #8D6E63;
   display: block;
-  margin: 50px auto;
-  font-size: 14px;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid black;
-  background-color: rgb(76, 65, 93);
-  color: white;
-  cursor: pointer;
+  margin: 20px auto;
+	height: 40px;
+	border-radius: 10px;
+	width:120px;
+	font-size: 12px;
 }
 #add-button:hover{
-  background-color: rgb(188, 238, 153);
-  color: black;
+  background-color: #D7CCC8;
+  color: #8D6E63;
+  border: 2px solid #8D6E63;
+  cursor: pointer;
 }
 .number{
   font-size: 12px;
   color: rgb(112, 112, 112);
   text-align: right;
-}
-.title{
-  width: 70%;
-}
-.total-row{
-  font-weight: bold;
-  border-top: 2px solid black;
-  border-bottom: 2px solid black;
 }
 </style>

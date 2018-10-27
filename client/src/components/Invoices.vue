@@ -1,7 +1,9 @@
 <template lang="html">
   <div class="wrapper">
     <export-popup v-if="exportVisible" :invProps="invProps"></export-popup>
-    <h1>Fakture</h1>
+    <header>
+      <h1><i class="fas fa-file-invoice"></i>FAKTURA</h1>
+    </header>
     <multiselect
      :options="buyers"
      label="kup_naziv"
@@ -64,10 +66,13 @@
   			</tr>
   		</table>
   	</div>
-    <div v-if="!hasItems">
-      "OVAJ KUPAC NEMA STAVKE U FAKTURI"
+    <section id="obavestenje" v-if="!hasItems">
+  		<h2>OVAJ KUPAC NEMA STAVKE U FAKTURI</h2>
+  	</section>
+    <div id="button-div">
+        <button type="button" id="add-button" name="button" @click="exportInvoice" v-if="hasItems">Izdaj Fakturu</button>
     </div>
-    <button type="button" id="add-button" name="button" @click="exportInvoice" v-if="hasItems">Izdaj Fakturu</button>
+
   </div>
 </template>
 
@@ -182,13 +187,34 @@ export default {
 *{
   font-size: 14px;
 }
+header{
+  display: block;
+	text-align: center;
+	color: #fff;
+	background-color: #8D6E63;
+	margin: auto;
+	height: 50px;
+  width: 640px;
+}
+header h1{
+	margin: 0;
+	padding: 0;
+	line-height: 50px;
+	font-weight: normal;
+  font-size: 20px;
+}
+header i{
+	color: white;
+	margin-right: 10px;
+}
 .multiselect{
-  width: 50%;
+  width: 25%;
   margin: 50px auto;
 }
 table{
+  margin: auto;
 	border-collapse: collapse;
-	width: 100%;
+	width: 70%;
 }
 
 th, td {
@@ -257,19 +283,37 @@ ul hr{
 	text-align: center;
 	color: #06118A;
 }
+#button-div{
+  text-align: center;
+  margin-top: 50px;
+}
 #add-button{
-  display: block;
-  margin: 50px auto;
   font-size: 14px;
   padding: 10px;
   border-radius: 5px;
   border: 1px solid black;
-  background-color: rgb(76, 65, 93);
-  color: white;
+  background-color: #8D6E63;
+  color: #fff;
   cursor: pointer;
 }
 #add-button:hover{
-  background-color: rgb(188, 238, 153);
-  color: black;
+  background-color: #D7CCC8;
+  color: #8D6E63;
+  border: 1px solid #8D6E63;
+  cursor: pointer;
+}
+#obavestenje{
+  display: inline-block;
+  width: 30%;
+  height: 20%;
+  text-align: center;
+  vertical-align: middle;
+	margin-left: 20%;
+  outline: 1px solid #8D6E63;
+  padding: 20px;
+	background-color: #D7CCC8;
+	color: #4E342E;
+	border-radius: 10px;
+	outline: none;
 }
 </style>

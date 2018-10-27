@@ -1,14 +1,20 @@
 <template>
 <div id="wrapper">
-    <div id="side-menu">
+    <aside>
+    <nav>
       <ul>
-        <li v-for="m in menus"
+        <li @click="changeComp('Daily')" :class="{'active': selected === 'Daily'}"><i class="far fa-calendar-check"></i>Dnevni unos</li>
+        <li @click="changeComp('Buyers')" :class="{'active': selected === 'Buyers'}"><i class="far fa-user"></i>Kupci</li>
+        <li @click="changeComp('Invoices')" :class="{'active': selected === 'Invoices'}"><i class="fas fa-file-invoice"></i>Faktura</li>
+        <li @click="changeComp('Products')" :class="{'active': selected === 'Products'}"><img src="../assets/bread.png">Proizvodi</li>
+        <!-- <li v-for="m in menus"
          :key="m.key"
          @click= "changeComp(m.key)"
          :class="{'active': m.key === selected}"
-         >{{m.title}}</li>
+         >{{m.title}}</li> -->
       </ul>
-    </div>
+    </nav>
+    </aside><!--kraj aside navigacije-->
     <main-window/>
   </div>
 </div>
@@ -48,44 +54,77 @@ export default {
 <style scoped>
 #wrapper{
   height: 100vh;
+  margin: 0px;
 }
 
-h2 {
-  font-weight: normal;
+aside{
+	background-color: #EFEBE9;
+	width: 200px;
+	height: 100%;
+	float: left;
 }
 
-ul {
-  margin-bottom: 0px;
-  list-style-type: none;
-  padding: 0;
+aside i{
+	color:#8D6E63;
+	margin-right: 10px;
+	font-size: 25px;
 }
+nav{
+	margin-top: 50px;
+}
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color:#EFEBE9;
+}
+nav ul li,
+nav ul li:visited{
+  display: block;
+  color: #4E342E;
+  padding: 10px 0;
+  text-decoration: none;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	font-weight: bold;
+	border: 1px solid #8D6E63;
+	background-color: #EFEBE9;
 
-li {
-  text-align: left;
-  font-size: 15px;
-  margin: 10px 10px;
+}
+nav ul li:hover{
+	display: block;
+  color: #4E342E;
+  padding: 10px 0;
+  text-decoration: none;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	font-weight: bold;
+	border: 1px solid #8D6E63;
+	background-color: #D7CCC8;
   cursor: pointer;
-  text-transform: uppercase;
-  padding: 5px;
-  border-bottom: 0.5px solid silver;
 }
 
-li:hover, .active{
-  background-color: rgb(188, 238, 153);
-  color: black;
-  opacity: 10%;
-  border-radius: 5px;
+.active{
+	display: block;
+  color: #4E342E;
+  padding: 10px 0;
+  text-decoration: none;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	font-weight: bold;
+	border: 2px solid #8D6E63;
+	background-color: #D7CCC8;
+	border-radius: 15px;
 }
+img{
+	height: 25px;
+	margin-right: 10px;
+	line-height:52px;
+	vertical-align:bottom;
 
-a {
-  color: #42b983;
-}
-
-#side-menu{
-  width: 20%;
-  height: 100%;
-  background-color: rgb(76, 65, 93);
-  color: white;
-  float: left;
 }
 </style>

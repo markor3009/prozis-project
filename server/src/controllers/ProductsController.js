@@ -6,5 +6,13 @@ module.exports = {
       .then((p) => {
         res.send(p)
       })
+  },
+  updateProducts (req, res) {
+    let products = req.body
+    for (var i = 0; i < products.length; i++) {
+      seq.query('UPDATE cenovnik SET cen_cena = ? WHERE kupac_kup_id=3 AND proizvod_pro_id=?', {
+        replacements: [products[i].cen_cena, products[i].pro_id], type: seq.QueryTypes.UPDATE })
+    }
+    res.send('OK')
   }
 }

@@ -279,7 +279,7 @@ ul{
   margin-right: 10%;
 	padding: 15px;
 	border:solid 2px;
-	font-weight: bold;
+	font-weight: 400;
 }
 #kupac::children{
   float: left;

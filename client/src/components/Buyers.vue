@@ -1,10 +1,12 @@
 <template lang="html">
   <div class="wrapper">
-    <h1>Kupci</h1>
-    <div id="select-menu"><multiselect :options="buyers" label="kup_naziv" v-model="selected" @input="reset"></multiselect>
+    <header>
+  		<h1><i class="far fa-calendar-check"></i>KUPCI</h1>
+   	</header>
+    <div id="controls"><multiselect :options="buyers" label="kup_naziv" v-model="selected" @input="reset"></multiselect>
     <span @click="createNewBuyer">+DODAJ NOVOG KUPCA</span></div>
     <ul id="basic-info">
-      <li><h3>Osnovne informacije</h3></li>
+      <li><h3>OSNOVNE INFORMACIJE</h3></li>
       <li><label>Ime Prezime: </label><input type="text" v-model="selected.kup_naziv"></li>
       <li><label>Pozivni broj: </label><input type="text" v-model="selected.kup_pozbr"></li>
       <li><label>Adresa: </label><input type="text" v-model="selected.kup_adresa"></li>
@@ -16,7 +18,7 @@
         <th>Cena proizvoda</th>
       </tr>
       <tr v-for="p in selected.prices" :key="p.pro_id">
-        <td>{{p.pro_naziv}}</td>
+        <td class="firstTD">{{p.pro_naziv}}</td>
         <td><input v-model="p.cen_cena"></td>
       </tr>
     </table>
@@ -143,16 +145,41 @@ export default {
 </script>
 
 <style lang="css" scoped>
+header{
+  display: block;
+	text-align: center;
+	color: #fff;
+	background-color: #8D6E63;
+	margin: auto;
+	height: 50px;
+  width: 640px;
+}
+header h1{
+	margin: 0;
+	padding: 0;
+	line-height: 50px;
+	font-weight: normal;
+  font-size: 20px;
+}
+header i{
+	color: white;
+	margin-right: 10px;
+}
 #basic-info{
   padding: 20px;
   margin-left: 10%;
+  margin-right: 10%;
   float: left;
   display: inline-block;
   list-style: none;
-  border: 1px solid  rgb(76, 65, 93);
+  border: 1px solid #4E342E;
+  font-size: 14px;
 }
 #basic-info h3{
   text-align: center;
+  margin-top: 5px;
+  margin-bottom: 30px;
+  color: #4E342E;
 }
 #basic-info li{
   margin-bottom: 20px;
@@ -164,39 +191,60 @@ export default {
   float: right;
   padding: 5px;
 }
-.multiselect{
-  width: 30%;
-  display: inline-block;
-  margin: 50px 0px;
-  margin-left: 30%;
+#controls{
+  margin: 20px 0px;
+  text-align: center;
 }
-#select-menu span{
+.multiselect{
+  display: inline-block;
+  width: 25%;
+  margin-right: 20px;
+}
+#controls span{
   display: inline-block;
   margin-left: 20px;
-  padding: 5px;
+  padding: 10px;
   font-size: 14px;
-  background-color: rgb(181, 200, 185);
+  background-color: #D7CCC8;
+	font-weight: bold;
+	color: #4E342E;
   text-align: center;
   border-radius: 5px;
   cursor: pointer;
 }
-#select-menu span:hover{
-  background-color: rgb(188, 238, 153);
-  color: black;
+#controls span:hover{
+  background-color: #B49F98;
+	color: #fff;
+	border: none;
 }
 table{
-  margin: auto;
   font-size: 14px;
-  width: 40%;
-  padding: 15px;
-  border-collapse: collapse;
-  border: 1px solid  rgb(76, 65, 93);
+  width: 30%;
+  text-align: left;
+	border-bottom: 1px solid #4E342E;
+	font-size: 14px;
 }
 table tr{
   border-bottom: 1px solid blue;
 }
-table td, th{
-  padding: 5px;
+table tr th{
+	padding: 5px;
+	margin-left: 20px;
+}
+table tr td{
+	padding: 5px;
+  width: 70px;
+}
+table tr:nth-of-type(2n){
+	background-color: #D7CCC8;
+}
+table tr:nth-of-type(2n-1) input{
+	border: 1px solid rgb(161, 144, 117);
+}
+.firstTD{
+	text-align:left;
+	font-weight: normal;
+  width: 70%;
 }
 table label{
   display: block;
@@ -212,20 +260,26 @@ table input{
   padding: 3px;
 }
 .buttons{
-  float: right;
+  text-align: right;
+  margin-top: 10px;
+  margin-right: 20%;
 }
 .buttons button{
-  margin: 50px 40px;
+  display: inline-block;
+  margin-top: 2%;
+  margin-right: 1%;
   font-size: 14px;
   padding: 10px;
   border-radius: 5px;
   border: 1px solid black;
-  background-color: rgb(76, 65, 93);
-  color: white;
+  background-color: #8D6E63;
+  color: #fff;
   cursor: pointer;
 }
 .buttons button:hover{
-  background-color: rgb(188, 238, 153);
-  color: black;
+  background-color: #D7CCC8;
+  color: #8D6E63;
+  border: 2px solid #8D6E63;
+  cursor: pointer;
 }
 </style>

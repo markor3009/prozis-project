@@ -21,6 +21,7 @@ export default {
   padding: 0px;
   min-height: 100vh;
   width: 100%;
-  font-family: sans-serif;
+  font-family: 'Lato';
+  font-size: 14px;
 }
 </style>

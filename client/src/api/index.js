@@ -39,6 +39,13 @@ export default {
       method: 'GET'
     })
   },
+  updateProducts: (params) => {
+    return axios({
+      url: 'products',
+      method: 'POST',
+      data: params
+    })
+  },
   fetchInvoice: (params) => {
     return axios({
       url: 'invoices',

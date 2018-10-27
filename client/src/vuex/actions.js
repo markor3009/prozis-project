@@ -55,6 +55,15 @@ export default {
       commit('STORE_PRODUCTS', response.data)
     })
   },
+  updateProducts: ({commit}, params) => {
+    return api.updateProducts(params).then((response) => {
+      if(response.data == 'OK'){
+        return Promise.resolve();
+      }else{
+        return Promise.reject();
+      }
+    })
+  },
   addInvoice: ({commit, dispatch}, params) => {
     return api.addInvoice({id:params}).then((response) => {
       if(response.data == 'OK'){
