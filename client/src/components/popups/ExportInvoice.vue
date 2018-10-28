@@ -18,6 +18,14 @@
           <td>Valuta placanja fakture:</td>
           <td><input type="date" v-model="invExtDate" :disabled="disabledFields"/></td>
         </tr>
+        <tr>
+          <td>Datum prometa dobara i usluga:</td>
+          <td><input type="date" v-model="invTraDate" :disabled="disabledFields"/></td>
+        </tr>
+        <tr>
+          <td>Unesi slovima ({{total | formatNumber}}) :</td>
+          <td><input type="text" v-model="totalWords" :disabled="disabledFields"/></td>
+        </tr>
       </table>
       <div class="footer">
         <button type="button" class="out-button" @click="exportInv" v-if="!clicked">Izdaj fakturu</button>
@@ -37,11 +45,24 @@ import {bus} from '../../main'
 import {mapActions, mapGetters} from 'vuex'
 export default {
   props:['invProps'],
+  filters: {
+    formatNumber (n) {
+      n = n.toString()
+      if(n.indexOf('.')>0){
+        var dot = n.indexOf('.')
+        var newNum = n.substring(0,dot+3)
+        return newNum.replace('.',',')
+      }
+      return n+',00'
+    }
+  },
   data () {
     return {
       invNumber: '',
       invDate: '',
       invExtDate: '',
+      invTraDate: '',
+      totalWords: '',
       message : 'Sva polja su obavezna!',
       showMessage: false,
       clicked: false,
@@ -60,6 +81,7 @@ export default {
         invoiceID: this.inv[0].fak_id,
         invoiceNumber: this.invNumber,
         invoiceDate: this.invExtDate,
+        invoiceTraffic: this.invTraDate,
         invoiceTotal: this.invProps.total,
         buyerID: this.buyer.kup_id
       }
@@ -72,7 +94,7 @@ export default {
         this.showMessage = false;
         this.clicked = true;
         this.disabledFields = true;
-        let routeData = this.$router.resolve({name: 'faktura', query: {id: this.buyer.kup_id, number: this.invNumber, date: this.invDate, extDate: this.invExtDate}});
+        let routeData = this.$router.resolve({name: 'faktura', query: {id: this.buyer.kup_id, number: this.invNumber, date: this.invDate, extDate: this.invExtDate, traDate: this.invTraDate, total: this.totalWords}});
         window.open(routeData.href, '_blank');
       }else{
         this.showMessage = true
@@ -92,6 +114,9 @@ export default {
     },
     inv(){
       return this.invProps.invoice
+    },
+    total(){
+      return this.invProps.total
     }
 
   }

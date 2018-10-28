@@ -91,12 +91,9 @@ export default {
         if(empty == 0){
           alert("Unesite cenu za bar jedan prozivod.")
         }else{
-          console.log('ovo je kupac koga saljem negde....'+this.selected);
           if (this.selected.kup_id !== undefined) {
-            console.log('na update ga saljem');
             this.update()
           }else{
-            console.log('na kreiranje ga saljem');
             this.saveNewBuyer()
           }
         }

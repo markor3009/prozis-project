@@ -17,7 +17,7 @@
   					<li>Datum izdavanja računa: {{invDate}}</li>
   					<li>Mesto izdavanja računa: Beograd- Zemun</li>
   					<li>Valuta plaćanja računa: {{invExtDate}}</li>
-  					<li>Datum prometa dobara i usluga:{{invDate}}</li>
+  					<li>Datum prometa dobara i usluga: {{invTraDate}}</li>
   				</ul>
   			</p>
   		</div><!--kraj podaci-->
@@ -89,7 +89,7 @@
   		</table>
   	</div><!--kraj tabele-->
 
-  	<p>Slovima:osamhiljadadvestotine svadesetdvadinara i 50/100</p>
+  	<p>Slovima: {{totalWords}}</p>
 
   	<div id="dodatak">
   		<p>Napomena o poreskom oslobađanju: NEMA<br>
@@ -176,6 +176,12 @@ export default {
     invExtDate(){
       return this.$route.query.extDate;
     },
+    invTraDate(){
+      return this.$route.query.traDate;
+    },
+    totalWords(){
+      return this.$route.query.total;
+    },
     buyer() {
       var b = {}
       for (var i = 0; i < this.buyers.length; i++) {
@@ -223,7 +229,7 @@ export default {
 	padding: 20px
 }
 #zaglavlje{
-	margin-left: 20%;
+	margin-left: 5%;
 	color: #06118A;
 }
 #podaci{
