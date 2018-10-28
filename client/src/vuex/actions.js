@@ -50,6 +50,15 @@ export default {
       }
     })
   },
+  deleteItem: ({commit}, params) => {
+    return api.deleteItem(params).then((response) => {
+      if(response.data == 'OK'){
+        return Promise.resolve();
+      }else{
+        return Promise.reject();
+      }
+    })
+  },
   fetchProducts: ({commit}) => {
     return api.fetchProducts().then((response) => {
       commit('STORE_PRODUCTS', response.data)

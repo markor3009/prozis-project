@@ -16,5 +16,13 @@ module.exports = {
       .then(() => {
         res.send('OK')
       })
+  },
+  deleteItem (req, res) {
+    const id = req.body.id
+    seq.query('DELETE FROM stavka WHERE stk_id = ?', {
+      replacements: [id], type: seq.QueryTypes.DELETE
+    }).then(() => {
+      res.send('OK')
+    })
   }
 }

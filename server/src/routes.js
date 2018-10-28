@@ -12,6 +12,7 @@ module.exports = (app) => {
   app.put('/api/buyers', BuyersController.updateBuyers)
   app.get('/api/prices/:buyId', PricesController.getPrices)
   app.post('/api/items', ItemController.addItems)
+  app.delete('/api/items', ItemController.deleteItem)
   app.get('/api/products', ProductsController.getProducts)
   app.post('/api/products', ProductsController.updateProducts)
   app.put('/api/invoices', InvoiceController.getInvoice)

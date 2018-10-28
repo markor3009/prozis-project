@@ -33,6 +33,13 @@ export default {
       data: params
     })
   },
+  deleteItem: (params) => {
+    return axios({
+      url: 'items',
+      method: 'DELETE',
+      data: {id: params}
+    })
+  },
   fetchProducts: () => {
     return axios({
       url: 'products',

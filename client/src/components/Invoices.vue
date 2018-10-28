@@ -1,6 +1,7 @@
 <template lang="html">
   <div class="wrapper">
     <export-popup v-if="exportVisible" :invProps="invProps"></export-popup>
+    <details-popup v-if="detailsVisible" :items="items" :buyer="selected.kup_id"></details-popup>
     <header>
       <h1><i class="fas fa-file-invoice"></i>FAKTURA</h1>
     </header>
@@ -69,8 +70,9 @@
     <section id="obavestenje" v-if="!hasItems">
   		<h2>OVAJ KUPAC NEMA STAVKE U FAKTURI</h2>
   	</section>
-    <div id="button-div">
-        <button type="button" id="add-button" name="button" @click="exportInvoice" v-if="hasItems">Izdaj Fakturu</button>
+    <div id="button-div" v-if="hasItems">
+        <button type="button" class="add-button" name="button" @click="exportInvoice">Izdaj Fakturu</button>
+        <button type="button" class="add-button" name="button" @click="openDetails">Otvori detalje</button>
     </div>
 
   </div>
@@ -80,6 +82,7 @@
 import Multiselect from 'vue-multiselect'
 import {mapActions, mapGetters} from 'vuex'
 import ExportInvoice from './popups/ExportInvoice'
+import DetailsInvoice from './popups/DetailsInvoice'
 import {bus} from '../main'
 export default {
   name: 'Invoices',
@@ -98,6 +101,7 @@ export default {
     return {
       items: '',
       exportVisible: false,
+      detailsVisible: false,
       selected: '',
       invProps:''
     }
@@ -122,6 +126,9 @@ export default {
       }
       this.exportVisible = true
     },
+    openDetails () {
+      this.detailsVisible = true;
+    },
     refresh(){
       this.selected = this.buyers[0]
       this.fetchInvoice(this.selected.kup_id).then((items) => {
@@ -131,7 +138,8 @@ export default {
   },
   components: {
     'multiselect': Multiselect,
-    'export-popup': ExportInvoice
+    'export-popup': ExportInvoice,
+    'details-popup': DetailsInvoice
   },
   computed: {
     ...mapGetters({
@@ -175,9 +183,17 @@ export default {
     bus.$on('closeExport', () => {
       this.exportVisible = false;
     })
+    bus.$on('closeDetails', () => {
+      this.detailsVisible = false;
+    })
     bus.$on('closedInvoice', () =>{
       this.refresh();
       this.exportVisible = false;
+    })
+    bus.$on('deletedItem', (kupId) =>{
+      this.fetchInvoice(kupId).then((items) => {
+        this.items = items
+      })
     })
   }
 }
@@ -287,7 +303,7 @@ ul hr{
   text-align: center;
   margin-top: 50px;
 }
-#add-button{
+.add-button{
   font-size: 14px;
   padding: 10px;
   border-radius: 5px;
@@ -296,7 +312,7 @@ ul hr{
   color: #fff;
   cursor: pointer;
 }
-#add-button:hover{
+.add-button:hover{
   background-color: #D7CCC8;
   color: #8D6E63;
   border: 1px solid #8D6E63;
