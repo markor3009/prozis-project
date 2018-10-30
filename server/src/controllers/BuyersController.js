@@ -4,13 +4,17 @@ module.exports = {
   getBuyers (req, res) {
     seq.query('SELECT * FROM kupac WHERE kup_id<>3', { type: seq.QueryTypes.SELECT })
       .then(b => {
-        res.send(b)
+        var response = {
+          success: true,
+          buyers: b
+        }
+        res.send(response)
       })
   },
   updateBuyers (req, res) {
     var buyer = req.body
-    seq.query('UPDATE kupac SET kup_naziv=?, kup_pib=?, kup_adresa=?, kup_pozbr=? WHERE kup_id=?',
-      { replacements: [buyer.kup_naziv, buyer.kup_pib, buyer.kup_adresa, buyer.kup_pozbr, buyer.kup_id], type: seq.QueryTypes.UPDATE })
+    seq.query('UPDATE kupac SET kup_naziv=?, kup_pib=?, kup_adresa=?, kup_pozbr=?, kup_mesto=? WHERE kup_id=?',
+      { replacements: [buyer.kup_naziv, buyer.kup_pib, buyer.kup_adresa, buyer.kup_pozbr, buyer.kup_mesto, buyer.kup_id], type: seq.QueryTypes.UPDATE })
       .then(() => {
         for (var i = 0; i < buyer.prices.length; i++) {
           var product = buyer.prices[i]
@@ -22,8 +26,8 @@ module.exports = {
   },
   addBuyer (req, res) {
     var buyer = req.body
-    seq.query('INSERT INTO kupac(kup_naziv, kup_pib, kup_adresa, kup_pozbr) VALUES (?, ?, ?, ?)',
-      { replacements: [buyer.kup_naziv, buyer.kup_pib, buyer.kup_adresa, buyer.kup_pozbr], type: seq.QueryTypes.INSERT })
+    seq.query('INSERT INTO kupac(kup_naziv, kup_pib, kup_adresa, kup_pozbr, kup_mesto) VALUES (?, ?, ?, ?, ?)',
+      { replacements: [buyer.kup_naziv, buyer.kup_pib, buyer.kup_adresa, buyer.kup_pozbr, buyer.kup_mesto], type: seq.QueryTypes.INSERT })
       .then(() => {
         for (var i = 0; i < buyer.prices.length; i++) {
           var product = buyer.prices[i]

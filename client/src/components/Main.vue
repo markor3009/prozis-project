@@ -7,11 +7,7 @@
         <li @click="changeComp('Buyers')" :class="{'active': selected === 'Buyers'}"><i class="far fa-user"></i>Kupci</li>
         <li @click="changeComp('Invoices')" :class="{'active': selected === 'Invoices'}"><i class="fas fa-file-invoice"></i>Faktura</li>
         <li @click="changeComp('Products')" :class="{'active': selected === 'Products'}"><img src="../assets/bread.png">Proizvodi</li>
-        <!-- <li v-for="m in menus"
-         :key="m.key"
-         @click= "changeComp(m.key)"
-         :class="{'active': m.key === selected}"
-         >{{m.title}}</li> -->
+        <li @click="changeComp('History')" :class="{'active': selected === 'History'}"><i class="fas fa-history"></i>Istorija</li>
       </ul>
     </nav>
     </aside><!--kraj aside navigacije-->
@@ -22,6 +18,7 @@
 
 <script>
 import MainWindow from '@/components/MainWindow'
+import {mapActions} from 'vuex'
 import {bus} from '../main'
 export default {
   name: 'Main',
@@ -33,12 +30,16 @@ export default {
         {title: 'Dnevni unos', key: 'Daily'},
         {title: 'Kupci', key: 'Buyers'},
         {title: 'Fakture', key: 'Invoices'},
-        {title: 'Proizvodi', key: 'Products'}
+        {title: 'Proizvodi', key: 'Products'},
+        {title: 'Istorija', key: 'History'}
       ]
     }
   },
 
   methods: {
+    ...mapActions({
+      'fetchBuyers': 'fetchBuyers'
+    }),
     changeComp (menu) {
       this.selected = menu
       bus.$emit('chosenMenu', menu)
@@ -46,6 +47,12 @@ export default {
   },
   components: {
     'main-window': MainWindow
+  },
+  created() {
+    this.fetchBuyers().catch(() => {
+      this.$router.push('/test')
+    })
+
   }
 }
 </script>

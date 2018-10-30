@@ -1,7 +1,8 @@
 <template>
   <div class="hello">
-    <input type="text" v-model="email" placeholder="email">
-    <button type="button" name="button" @click="registerUser">REGISTER</button>
+    <input type="text" v-model="user.username" placeholder="username">
+    <input type="text" v-model="user.password" placeholder="password">
+    <button type="button" name="button" @click="loginUser">LOGIN</button>
   </div>
 </template>
 
@@ -11,16 +12,29 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      email: ''
+      user: {
+        username: '',
+        password: ''
+      }
     }
   },
   methods: {
     ...mapActions({
-      'register': 'register'
+      'register': 'register',
+      'loginU': 'login',
+      'fetchBuyers': 'fetchBuyers'
     }),
     registerUser(){
       this.register().then((response)=>{
         console.log(response);
+      })
+    },
+    loginUser(){
+      this.loginU(this.user).then(() => {
+        this.fetchBuyers()
+        this.$router.push('/')
+      }).catch(() => {
+        alert('not Good!')
       })
     }
   }

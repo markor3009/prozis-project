@@ -9,6 +9,7 @@
       <li><h3>OSNOVNE INFORMACIJE</h3></li>
       <li><label>Ime Prezime: </label><input type="text" v-model="selected.kup_naziv"></li>
       <li><label>Pozivni broj: </label><input type="text" v-model="selected.kup_pozbr"></li>
+      <li><label>Mesto: </label><input type="text" v-model="selected.kup_mesto"></li>
       <li><label>Adresa: </label><input type="text" v-model="selected.kup_adresa"></li>
       <li><label>PIB: </label><input type="text" v-model="selected.kup_pib"></li>
     </ul>
@@ -81,7 +82,7 @@ export default {
       })
     },
     save () {
-      if(this.selected.kup_pib != '' && this.selected.kup_naziv != '' && this.selected.kup_adresa != '' && this.selected.kup_pozbr != ''){
+      if(this.selected.kup_pib != '' && this.selected.kup_naziv != '' && this.selected.kup_adresa != '' && this.selected.kup_pozbr != ''&& this.selected.kup_mesto != ''){
         var empty = 0
         for (var i = 0; i < this.selected.prices.length; i++) {
           if(this.selected.prices[i].cen_cena !== '' && this.selected.prices[i].cen_cena !== '0'){

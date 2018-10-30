@@ -26,7 +26,7 @@
   	<div id="kupac">
   		<p>{{buyer.kup_naziv}}<br>
   		{{buyer.kup_adresa}}<br>
-  		11070 Novi Beograd<br>
+  		{{buyer.kup_pozbr}} {{buyer.kup_mesto}}<br>
   		PIB: {{buyer.kup_pib}}</p>
   	</div><!--kraj kupac-->
   	</div><!--kraj float-->
@@ -213,10 +213,20 @@ export default {
     }
   },
   created(){
+    var fakId = this.$route.query.fakId
     var buyerID = this.$route.query.id
-    this.fetchInvoice(buyerID).then((items) => {
+    var params = {
+      inv: '',
+      id: ''
+    }
+    if (fakId) {
+      params.inv = fakId
+    }
+    params.id = buyerID
+    this.fetchInvoice(params).then((items) => {
       this.items = JSON.parse(JSON.stringify(items));
     })
+
   }
 }
 </script>

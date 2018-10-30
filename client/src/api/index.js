@@ -4,8 +4,18 @@ export default {
   register: () =>{
     return axios.get('register');
   },
+  login: (params) =>{
+    console.log(params);
+    return axios({
+      url: 'login',
+      method: 'POST',
+      data: params
+    })
+  },
   fetchBuyers: () => {
-    return axios.get('buyers')
+    return axios.get('buyers', {
+      headers: {"x-access-token": localStorage.getItem("token")}
+    })
   },
   updateBuyers: (params) => {
     return axios({
@@ -72,6 +82,13 @@ export default {
       url:'close',
       method: 'POST',
       data: params
+    })
+  },
+  fetchHistory: (params) => {
+    return axios ({
+      url: 'history',
+      method: 'PATCH',
+      data: {id:params}
     })
   }
 }

@@ -111,7 +111,11 @@ export default {
       'fetchInvoice': 'fetchInvoice'
     }),
     getInvoice(){
-      this.fetchInvoice(this.selected.kup_id).then((invoice) =>{
+      var params = {
+        id: this.selected.kup_id,
+        inv: ''
+      }
+      this.fetchInvoice(params).then((invoice) =>{
         this.items = invoice
       })
     },

@@ -80,8 +80,10 @@ export default {
       var invoice = {
         invoiceID: this.inv[0].fak_id,
         invoiceNumber: this.invNumber,
-        invoiceDate: this.invExtDate,
+        invoiceDate: this.invDate,
+        invoicePayDate: this.invExtDate,
         invoiceTraffic: this.invTraDate,
+        invoiceDesc: this.totalWords,
         invoiceTotal: this.invProps.total,
         buyerID: this.buyer.kup_id
       }
@@ -90,7 +92,7 @@ export default {
       });
     },
     exportInv () {
-      if(this.invNumber!=='' && this.invDate !== '' && this.invExtDate !== ''){
+      if(this.invNumber!=='' && this.invDate !== '' && this.invExtDate !== '' && this.traDate !== '' && this.totalWords !== ''){
         this.showMessage = false;
         this.clicked = true;
         this.disabledFields = true;
@@ -151,9 +153,9 @@ export default {
   background-color: white;
   display: inline-block;
   width: 40%;
-  height: 50%;
+  height: 60%;
   margin: auto;
-  top: 25%;
+  top: 20%;
   left: 30%;
 }
 #close{

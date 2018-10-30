@@ -3,7 +3,6 @@
     <header>
       <h1><img src="../assets/bread.png"></i>PROIZVODI</h1>
     </header>
-    <span id="add-new">DODAJ NOVI PROIZVOD</span>
     <table>
       <tr>
         <th>Ime proizvoda</th>
@@ -12,7 +11,6 @@
       <tr v-for="p in products" :key="p.pro_id">
         <td class="firstTD">{{p.pro_naziv}}</td>
         <td><input type="number" v-model="p.cen_cena"></td>
-        <td class="remove-product"><span title="Izbriši proizvod" @click="deleteProduct(p.pro_id)">X</span></td>
       </tr>
     </table>
     <div class="buttons" v-if="changed">
@@ -91,24 +89,6 @@ img{
 	height: 25px;
 	margin-right: 10px;
   vertical-align: middle;
-}
-#add-new {
-  float: right;
-  margin-top: 3%;
-  margin-right: 10%;
-  padding: 10px;
-  font-size: 14px;
-  background-color: #D7CCC8;
-	font-weight: bold;
-	color: #4E342E;
-  text-align: center;
-  border-radius: 5px;
-  cursor: pointer;
-}
-#add-new:hover{
-  background-color: #B49F98;
-	color: #fff;
-	border: none;
 }
 table{
   display: block;

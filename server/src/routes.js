@@ -1,4 +1,5 @@
 const TestController = require('./controllers/TestController')
+const AuthenticationController = require('./controllers/AuthenticationController')
 const BuyersController = require('./controllers/BuyersController')
 const PricesController = require('./controllers/PricesController')
 const ItemController = require('./controllers/ItemController')
@@ -7,7 +8,8 @@ const InvoiceController = require('./controllers/InvoiceController')
 
 module.exports = (app) => {
   app.get('/api/register', TestController.register)
-  app.get('/api/buyers', BuyersController.getBuyers)
+  app.post('/api/login', TestController.login)
+  app.get('/api/buyers', AuthenticationController.authenticate, BuyersController.getBuyers)
   app.post('/api/buyers', BuyersController.addBuyer)
   app.put('/api/buyers', BuyersController.updateBuyers)
   app.get('/api/prices/:buyId', PricesController.getPrices)
@@ -18,4 +20,5 @@ module.exports = (app) => {
   app.put('/api/invoices', InvoiceController.getInvoice)
   app.post('/api/invoices', InvoiceController.addInvoice)
   app.post('/api/close', InvoiceController.closeInvoice)
+  app.patch('/api/history', InvoiceController.getHistory)
 }

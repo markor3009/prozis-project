@@ -11,6 +11,7 @@ import Daily from '@/components/Daily'
 import Buyers from '@/components/Buyers'
 import Invoices from '@/components/Invoices'
 import Products from '@/components/Products'
+import History from '@/components/History'
 export default {
   data () {
     return {
@@ -21,7 +22,8 @@ export default {
     'Daily': Daily,
     'Buyers': Buyers,
     'Invoices': Invoices,
-    'Products': Products
+    'Products': Products,
+    'History': History
   },
   computed: {
     ...mapGetters({

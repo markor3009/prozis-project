@@ -6,6 +6,16 @@ export default {
       return re;
     })
   },
+  login: ({commit}, params) => {
+    return api.login(params).then((response)=>{
+      if(response.data.status){
+        localStorage.setItem('token', response.data.token)
+        return Promise.resolve()
+      } else {
+        return Promise.reject()
+      }
+    })
+  },
   fetchPrices: ({commit}, params) => {
     return api.fetchPrices(params).then((response) => {
       var p = {
@@ -17,9 +27,13 @@ export default {
   },
   fetchBuyers: ({commit, dispatch}) => {
     return api.fetchBuyers().then((response) => {
-      commit('STORE_BUYERS',response.data)
-      for (var i = 0; i < response.data.length; i++) {
-        dispatch('fetchPrices',response.data[i].kup_id)
+      if(response.data.success){
+        commit('STORE_BUYERS',response.data.buyers)
+        for (var i = 0; i < response.data.buyers.length; i++) {
+          dispatch('fetchPrices',response.data.buyers[i].kup_id)
+        }
+      } else{
+        return Promise.reject()
       }
     })
   },
@@ -92,8 +106,13 @@ export default {
     })
   },
   fetchInvoice: ({commit}, params) => {
-    return api.fetchInvoice({id: params}).then((response)=> {
+    return api.fetchInvoice(params).then((response)=> {
       return response.data;
+    })
+  },
+  fetchHistory: ({commit}, params) => {
+    return api.fetchHistory(params).then((response) => {
+      return response.data
     })
   }
 }
