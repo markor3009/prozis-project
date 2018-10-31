@@ -38,7 +38,8 @@ export default {
 
   methods: {
     ...mapActions({
-      'fetchBuyers': 'fetchBuyers'
+      'fetchBuyers': 'fetchBuyers',
+      'fetchProducts': 'fetchProducts'
     }),
     changeComp (menu) {
       this.selected = menu
@@ -50,8 +51,9 @@ export default {
   },
   created() {
     this.fetchBuyers().catch(() => {
-      this.$router.push('/test')
+      this.$router.push('/login')
     })
+    this.fetchProducts()
 
   }
 }

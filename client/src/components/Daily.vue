@@ -25,7 +25,7 @@
         <th>Cena</th>
         <th>Iznos</th>
       </tr>
-      <tr v-for="(p, index) in selected.prices" :key="p.pro_naziv">
+      <tr v-for="(p, index) in selected.prices" :key="p.pro_naziv" v-show="p.cen_cena !== 0">
         <td class="firstTD">{{p.pro_naziv}}</td>
         <td class="kolicina"><input v-model="quantity[index]" @change="calculate" class="poljeKol"></td>
         <td>{{p.cen_cena}}</td>

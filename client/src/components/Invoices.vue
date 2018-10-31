@@ -135,7 +135,11 @@ export default {
     },
     refresh(){
       this.selected = this.buyers[0]
-      this.fetchInvoice(this.selected.kup_id).then((items) => {
+      var params = {
+        id: this.selected.kup_id,
+        inv: ''
+      }
+      this.fetchInvoice(params).then((items) => {
         this.items = items
       })
     }

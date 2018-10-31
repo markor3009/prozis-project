@@ -5,13 +5,13 @@
       <div class="title">
         <span>DETALJI FAKTURE</span>
       </div>
-      <div id="controls">
+      <!-- <div id="controls">
         <label>Izaberi datum unosa: </label>
         <date-picker
          id="datepicker"
          v-model="entryDate"
          ></date-picker>
-      </div>
+      </div> -->
       <div class="content-list">
         <table>
           <tr id="rawname">

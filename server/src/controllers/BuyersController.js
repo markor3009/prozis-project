@@ -2,7 +2,7 @@ const seq = require('../models/index')
 
 module.exports = {
   getBuyers (req, res) {
-    seq.query('SELECT * FROM kupac WHERE kup_id<>3', { type: seq.QueryTypes.SELECT })
+    seq.query('SELECT * FROM kupac WHERE kup_id<>1', { type: seq.QueryTypes.SELECT })
       .then(b => {
         var response = {
           success: true,
@@ -36,7 +36,7 @@ module.exports = {
         }
       })
       .then(() => {
-        seq.query('INSERT INTO faktura(kup_id, sta_id) VALUES ((SELECT max(kup_id) as id FROM kupac),1)', { type: seq.QueryTypes.INSERT })
+        seq.query('INSERT INTO faktura(kup_id, sta_id, fak_od) VALUES ((SELECT max(kup_id) as id FROM kupac),1,CURDATE())', { type: seq.QueryTypes.INSERT })
           .then(() => {
             res.send('OK')
           })

@@ -7,7 +7,7 @@
     <span @click="createNewBuyer">+DODAJ NOVOG KUPCA</span></div>
     <ul id="basic-info">
       <li><h3>OSNOVNE INFORMACIJE</h3></li>
-      <li><label>Ime Prezime: </label><input type="text" v-model="selected.kup_naziv"></li>
+      <li><label>Naziv: </label><input type="text" v-model="selected.kup_naziv"></li>
       <li><label>Pozivni broj: </label><input type="text" v-model="selected.kup_pozbr"></li>
       <li><label>Mesto: </label><input type="text" v-model="selected.kup_mesto"></li>
       <li><label>Adresa: </label><input type="text" v-model="selected.kup_adresa"></li>
@@ -136,8 +136,12 @@ export default {
   },
   created () {
     this.buyers = JSON.parse(JSON.stringify(this.buyersSource))
-    this.selected = this.buyers[0]
-    this.fetchProducts()
+    if(this.buyers.length !==0){
+      this.selected = this.buyers[0]
+    } else {
+      this.createNewBuyer()
+    }
+
   }
 }
 </script>
